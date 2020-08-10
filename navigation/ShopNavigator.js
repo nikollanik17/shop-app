@@ -160,9 +160,7 @@ const AdminNavigator = () => {
                 iconName={
                   Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
                 }
-                onPress={() => {
-                  navigation.navigate("EditProductScreen");
-                }}
+                onPress={() => route.params.submit()}
               />
             </HeaderButtons>
           ),

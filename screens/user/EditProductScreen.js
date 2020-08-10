@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import * as productsActions from "../../store/actions/products";
 
 const EditProductScreen = ({ route, ...props }) => {
+  const dispatch = useDispatch();
+
   const productId = route.params ? route.params.productId : null;
 
   const editedProduct = useSelector((state) =>
@@ -17,6 +20,23 @@ const EditProductScreen = ({ route, ...props }) => {
   const [description, setDescription] = useState(
     editedProduct ? editedProduct.description : ""
   );
+
+  const submitHandler = useCallback(() => {
+    if (editedProduct) {
+      dispatch(
+        productsActions.updateProduct(productId, title, description, imageUrl)
+      );
+    } else {
+      dispatch(
+        productsActions.createProduct(title, description, imageUrl, +price)
+      );
+    }
+    props.navigation.goBack();
+  }, [dispatch, productId, title, description, imageUrl, price]);
+
+  useEffect(() => {
+    props.navigation.setParams({ submit: submitHandler });
+  }, [submitHandler]);
 
   return (
     <ScrollView>
